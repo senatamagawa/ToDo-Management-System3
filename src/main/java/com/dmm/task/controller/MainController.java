@@ -65,10 +65,15 @@ public class MainController {
 		week = new ArrayList<>();
 		
 		List<Tasks> list;
-		list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		if(list.contains(admin)) {
+			list = repo.findAllByDateBetween(Sort.by(Sort.Direction.DESC, "id"));
+		} else {
+			list = repo.findByDateBetween();
+		}
+		//list = repo.findAllByDateBetween(Sort.by(Sort.Direction.DESC, "id"));
 		for(Tasks t : list) {
-			  tasks.add(t.getDate(), t);
-			}
+			tasks.add(t.getDate(), t);
+		}
 		model.addAttribute("prev", day.minusMonths(1));
 		model.addAttribute("next", day.plusMonths(1));
 		
