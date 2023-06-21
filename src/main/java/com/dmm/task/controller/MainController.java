@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,7 @@ import com.dmm.task.service.AccountUserDetails;
 public class MainController {
 	@GetMapping("/main")
 	//@PreAuthorize("hasRole('ROLE_ADMIN')") // 追記 ROLE_ADMINのユーザのみアクセスを許可
-	public String main(Model model) {
+	public String main(Model model, @AuthenticationPrincipal AccountUserDetails user) {
 		
 		List<List<LocalDate>> month = new ArrayList<>();
 		List<LocalDate> week = new ArrayList<>();
@@ -65,8 +64,8 @@ public class MainController {
 		week = new ArrayList<>();
 		
 		List<Tasks> list;
-		if(list.contains(admin)) {
-			list = repo.findAllByDateBetween(Sort.by(Sort.Direction.DESC, "id"));
+		if(user.admin) {
+			list = repo.findAllByDateBetween();
 		} else {
 			list = repo.findByDateBetween();
 		}
