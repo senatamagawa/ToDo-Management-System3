@@ -2,10 +2,12 @@ package com.dmm.task.controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ import com.dmm.task.service.AccountUserDetails;
 
 @Controller
 public class MainController {
+	private static final LocalDateTime LocalDateTime = null;
 	@GetMapping("/main")
 	//@PreAuthorize("hasRole('ROLE_ADMIN')") // 追記 ROLE_ADMINのユーザのみアクセスを許可
 	public String main(Model model, @AuthenticationPrincipal AccountUserDetails user) {
@@ -63,14 +66,14 @@ public class MainController {
 		month.add(week);
 		week = new ArrayList<>();
 		
-		List<Tasks> list;
-		if(user.admin) {
-			list = repo.findAllByDateBetween();
-		} else {
-			list = repo.findByDateBetween();
-		}
-		//list = repo.findAllByDateBetween(Sort.by(Sort.Direction.DESC, "id"));
+		List<Tasks> list;		
+		list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
 		for(Tasks t : list) {
+			if(user.getName() == "admin") {
+				list = repo.findAllByDateBetween(LocalDateTime, LocalDateTime);
+			} else {
+				list = repo.findByDateBetween(LocalDateTime, LocalDateTime, user.getName());
+			}
 			tasks.add(t.getDate(), t);
 		}
 		model.addAttribute("prev", day.minusMonths(1));

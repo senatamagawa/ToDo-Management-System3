@@ -66,4 +66,5 @@ public class AccountUserDetails implements UserDetails { // UserDetailsを実装
 	public String getName() {
 		return user.getName();
 	}
+	
 }
