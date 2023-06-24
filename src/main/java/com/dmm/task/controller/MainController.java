@@ -24,10 +24,9 @@ import com.dmm.task.service.AccountUserDetails;
 
 @Controller
 public class MainController {
-	private static final LocalDateTime LocalDateTime = null;
 	@GetMapping("/main")
 	//@PreAuthorize("hasRole('ROLE_ADMIN')") // 追記 ROLE_ADMINのユーザのみアクセスを許可
-	public String main(Model model, @AuthenticationPrincipal AccountUserDetails user) {
+	public String main(Model model, TaskForm form,@AuthenticationPrincipal AccountUserDetails user, LocalDateTime LocalDateTime) {
 		
 		List<List<LocalDate>> month = new ArrayList<>();
 		List<LocalDate> week = new ArrayList<>();
@@ -67,8 +66,9 @@ public class MainController {
 		
 		List<Tasks> list;
 		
+		
 		if(user.getUsername() == "admin") {
-			list = repo.findAllByDateBetween(LocalDateTime, LocalDateTime);
+			list = repo.findAllByDateBetween(LocalDateTime , LocalDateTime);
 		} else {
 			list = repo.findByDateBetween(LocalDateTime, LocalDateTime, user.getUsername());
 		}
