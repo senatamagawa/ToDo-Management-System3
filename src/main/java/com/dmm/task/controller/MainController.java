@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -66,16 +65,18 @@ public class MainController {
 		month.add(week);
 		week = new ArrayList<>();
 		
-		List<Tasks> list;		
-		list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		List<Tasks> list;
+		
+		if(user.getUsername() == "admin") {
+			list = repo.findAllByDateBetween(LocalDateTime, LocalDateTime);
+		} else {
+			list = repo.findByDateBetween(LocalDateTime, LocalDateTime, user.getUsername());
+		}
+		
 		for(Tasks t : list) {
-			if(user.getName() == "admin") {
-				list = repo.findAllByDateBetween(LocalDateTime, LocalDateTime);
-			} else {
-				list = repo.findByDateBetween(LocalDateTime, LocalDateTime, user.getName());
-			}
 			tasks.add(t.getDate(), t);
 		}
+		
 		model.addAttribute("prev", day.minusMonths(1));
 		model.addAttribute("next", day.plusMonths(1));
 		
