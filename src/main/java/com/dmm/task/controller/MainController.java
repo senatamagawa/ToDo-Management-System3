@@ -26,7 +26,7 @@ import com.dmm.task.service.AccountUserDetails;
 public class MainController {
 	@GetMapping("/main")
 	//@PreAuthorize("hasRole('ROLE_ADMIN')") // 追記 ROLE_ADMINのユーザのみアクセスを許可
-	public String main(Model model, TaskForm form,@AuthenticationPrincipal AccountUserDetails user, LocalDateTime LocalDateTime) {
+	public String main(Model model, TaskForm form,@AuthenticationPrincipal AccountUserDetails user) {
 		
 		List<List<LocalDate>> month = new ArrayList<>();
 		List<LocalDate> week = new ArrayList<>();
@@ -39,7 +39,8 @@ public class MainController {
 		
 		DayOfWeek w = day.getDayOfWeek();
 		day = day.minusDays(w.getValue());
-		
+
+		LocalDate start = day;
 		for(int i = 6; i <= day.lengthOfMonth(); i++) {
 			//最終週の翌月分をDayOfWeekの値を使って計算し、6．で生成したリストへ格納し、最後に1．で生成したリストへ格納する
 			w = day.getDayOfWeek();
@@ -54,6 +55,7 @@ public class MainController {
 			day = day.plusDays(1);
 		}
 		
+		LocalDate end = day;
 		w = day.getDayOfWeek();
 		for(int i = 1; i <= 7 - w.getValue(); i++) {
 			
@@ -65,12 +67,11 @@ public class MainController {
 		week = new ArrayList<>();
 		
 		List<Tasks> list;
-		
-		
+
 		if(user.getUsername() == "admin") {
-			list = repo.findAllByDateBetween(LocalDateTime , LocalDateTime);
+			list = repo.findAllByDateBetween(LocalDateTime.from(start), LocalDateTime.from(end));
 		} else {
-			list = repo.findByDateBetween(LocalDateTime, LocalDateTime, user.getUsername());
+			list = repo.findByDateBetween(LocalDateTime.from(start), LocalDateTime.from(end), user.getUsername());
 		}
 		
 		for(Tasks t : list) {
