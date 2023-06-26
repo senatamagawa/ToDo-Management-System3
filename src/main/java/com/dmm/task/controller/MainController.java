@@ -2,7 +2,6 @@ package com.dmm.task.controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,11 +66,11 @@ public class MainController {
 		week = new ArrayList<>();
 		
 		List<Tasks> list;
-
-		if(user.getUsername() == "admin") {
-			list = repo.findAllByDateBetween(LocalDateTime.from(start), LocalDateTime.from(end));
+		
+		if(user.getName() == "admin") {
+			list = repo.findAllByDateBetween(start.plusDays(1), end.lengthOfMonth());
 		} else {
-			list = repo.findByDateBetween(LocalDateTime.from(start), LocalDateTime.from(end), user.getUsername());
+			list = repo.findByDateBetween(start, end, user.getName());
 		}
 		
 		for(Tasks t : list) {
