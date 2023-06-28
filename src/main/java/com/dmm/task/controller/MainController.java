@@ -68,8 +68,10 @@ public class MainController {
 		List<Tasks> list;
 		
 		if(user.getName() == "admin") {
+			System.out.println("admin");
 			list = repo.findAllByDateBetween(start.plusDays(1), end.lengthOfMonth());
 		} else {
+			
 			list = repo.findByDateBetween(start, end, user.getName());
 		}
 		
