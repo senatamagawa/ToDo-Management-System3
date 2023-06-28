@@ -71,7 +71,7 @@ public class MainController {
 			System.out.println("admin");
 			list = repo.findAllByDateBetween(start.plusDays(1), end.lengthOfMonth());
 		} else {
-			
+			System.out.println("user");
 			list = repo.findByDateBetween(start, end, user.getName());
 		}
 		
