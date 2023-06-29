@@ -54,13 +54,13 @@ public class MainController {
 			day = day.plusDays(1);
 		}
 		
-		LocalDate end = day;
 		w = day.getDayOfWeek();
 		for(int i = 1; i <= 7 - w.getValue(); i++) {
 			
 			day = day.plusDays(1);
 			week.add(day);
-		}
+		}		
+		LocalDate end = day;
 		
 		month.add(week);
 		week = new ArrayList<>();
@@ -69,11 +69,13 @@ public class MainController {
 		
 		String admin = "admin";
 		if(user.getUsername() == admin) {
-			list = repo.findAllByDateBetween(start.plusDays(1), end.lengthOfMonth());
-			System.out.println(user.getUsername());
+			list = repo.findAllByDateBetween(start.plusDays(1), end);
+			System.out.println(start);
+			System.out.println(end);
 		} else {
-			list = repo.findByDateBetween(start, end, user.getName());
-			System.out.println(user.getUsername());
+			list = repo.findByDateBetween(start.plusDays(1), end, user.getName());
+			System.out.println(start);
+			System.out.println(end);
 		}
 		
 		for(Tasks t : list) {
