@@ -67,12 +67,13 @@ public class MainController {
 		
 		List<Tasks> list;
 		
-		if(user.getName() == "admin") {
-			System.out.println("admin");
+		String admin = "admin";
+		if(user.getUsername() == admin) {
 			list = repo.findAllByDateBetween(start.plusDays(1), end.lengthOfMonth());
+			System.out.println(user.getUsername());
 		} else {
-			System.out.println("user");
 			list = repo.findByDateBetween(start, end, user.getName());
+			System.out.println(user.getUsername());
 		}
 		
 		for(Tasks t : list) {
