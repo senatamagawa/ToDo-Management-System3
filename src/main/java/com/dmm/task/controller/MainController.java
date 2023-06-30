@@ -2,6 +2,7 @@ package com.dmm.task.controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +37,10 @@ public class MainController {
 		day = LocalDate.now();
 		day = LocalDate.of(day.getYear(),day.getMonthValue(), 1);
 		
+		LocalDate start = day;
 		DayOfWeek w = day.getDayOfWeek();
 		day = day.minusDays(w.getValue());
 
-		LocalDate start = day;
 		for(int i = 6; i <= day.lengthOfMonth(); i++) {
 			//最終週の翌月分をDayOfWeekの値を使って計算し、6．で生成したリストへ格納し、最後に1．で生成したリストへ格納する
 			w = day.getDayOfWeek();
@@ -59,8 +60,9 @@ public class MainController {
 			
 			day = day.plusDays(1);
 			week.add(day);
-		}		
-		LocalDate end = day;
+		}
+		
+		LocalDate end = start.with(TemporalAdjusters.lastDayOfMonth());
 		
 		month.add(week);
 		week = new ArrayList<>();
@@ -69,11 +71,13 @@ public class MainController {
 		
 		String admin = "admin";
 		if(user.getUsername() == admin) {
-			list = repo.findAllByDateBetween(start.plusDays(1), end);
+			list = repo.findAllByDateBetween(start, end);
+			System.out.println(user.getUsername());
 			System.out.println(start);
 			System.out.println(end);
 		} else {
-			list = repo.findByDateBetween(start.plusDays(1), end, user.getName());
+			list = repo.findByDateBetween(start, end, user.getUsername());
+			System.out.println(user.getUsername());
 			System.out.println(start);
 			System.out.println(end);
 		}
