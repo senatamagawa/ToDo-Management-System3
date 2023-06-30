@@ -72,6 +72,7 @@ public class MainController {
 		String admin = "admin";
 		if(user.getUsername() == admin) {
 			list = repo.findAllByDateBetween(start, end);
+			list = repo.findByDateBetween(start, end, user.getUsername());
 			System.out.println(user.getUsername());
 			System.out.println(start);
 			System.out.println(end);
@@ -115,7 +116,7 @@ public class MainController {
 
 	    Tasks task = new Tasks();
 
-	    task.setName(user.getName());
+	    task.setName(user.getUsername());
 	    task.setTitle(form.getTitle());
 	    task.setText(form.getText());
 	    task.setDate(form.getDate());
@@ -138,7 +139,7 @@ public class MainController {
 	public String update(Model model, @PathVariable Integer id, TaskForm form, @AuthenticationPrincipal AccountUserDetails user) {
 		Tasks task = repo.getById(id);
 		
-		task.setName(user.getName());
+		task.setName(user.getUsername());
 	    task.setTitle(form.getTitle());
 	    task.setText(form.getText());
 	    task.setDate(form.getDate());
