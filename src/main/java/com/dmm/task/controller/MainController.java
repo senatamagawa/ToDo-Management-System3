@@ -72,7 +72,6 @@ public class MainController {
 		String admin = "admin";
 		if(user.getUsername() == admin) {
 			list = repo.findAllByDateBetween(start, end);
-			list = repo.findByDateBetween(start, end, user.getUsername());
 			System.out.println(user.getUsername());
 			System.out.println(start);
 			System.out.println(end);
