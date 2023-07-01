@@ -40,8 +40,8 @@ public class MainController {
 		LocalDate start = day;
 		DayOfWeek w = day.getDayOfWeek();
 		day = day.minusDays(w.getValue());
-
-		for(int i = 6; i <= day.lengthOfMonth(); i++) {
+		
+		for(int i = 1; i <= day.lengthOfMonth(); i++) {
 			//最終週の翌月分をDayOfWeekの値を使って計算し、6．で生成したリストへ格納し、最後に1．で生成したリストへ格納する
 			w = day.getDayOfWeek();
 			
