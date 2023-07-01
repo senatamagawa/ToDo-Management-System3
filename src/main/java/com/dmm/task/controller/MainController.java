@@ -56,10 +56,9 @@ public class MainController {
 		}
 		
 		w = day.getDayOfWeek();
-		for(int i = 1; i <= 7 - w.getValue(); i++) {
-			
-			day = day.plusDays(1);
+		for(int i = 1; i <= 7 - w.getValue(); i++) {		
 			week.add(day);
+			day = day.plusDays(1);
 		}
 		
 		LocalDate end = start.with(TemporalAdjusters.lastDayOfMonth());
