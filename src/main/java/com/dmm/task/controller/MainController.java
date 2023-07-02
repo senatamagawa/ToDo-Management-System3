@@ -26,7 +26,7 @@ import com.dmm.task.service.AccountUserDetails;
 public class MainController {
 	@GetMapping("/main")
 	//@PreAuthorize("hasRole('ROLE_ADMIN')") // 追記 ROLE_ADMINのユーザのみアクセスを許可
-	public String main(Model model, TaskForm form,@AuthenticationPrincipal AccountUserDetails user) {
+	public String main(Model model, TaskForm form,@AuthenticationPrincipal AccountUserDetails user, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 		
 		List<List<LocalDate>> month = new ArrayList<>();
 		List<LocalDate> week = new ArrayList<>();
@@ -34,8 +34,17 @@ public class MainController {
 		MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<LocalDate, Tasks>();
 		
 		LocalDate day;
-		day = LocalDate.now();
-		day = LocalDate.of(day.getYear(),day.getMonthValue(), 1);
+		if (date == null) {  // 引数のdateがnullだったら今月と判断
+			day = LocalDate.now();
+		    day = LocalDate.of(day.getYear(), day.getMonthValue(), 1);
+		} else {  // nullでなかったら、前月・翌月が指定されたと判断して、引数で渡ってきた値を使う
+			day = date;
+		}
+		
+		model.addAttribute("prev", day.minusMonths(1));
+		model.addAttribute("next", day.plusMonths(1));
+		model.addAttribute("month", day.getYear() + "年" + day.getMonthValue() + "月");
+		
 		
 		LocalDate start = day;
 		DayOfWeek w = day.getDayOfWeek();
@@ -86,9 +95,6 @@ public class MainController {
 		for(Tasks t : list) {
 			tasks.add(t.getDate(), t);
 		}
-		
-		model.addAttribute("prev", day.minusMonths(1));
-		model.addAttribute("next", day.plusMonths(1));
 		
 		model.addAttribute("matrix", month);
 		model.addAttribute("tasks", tasks);	
